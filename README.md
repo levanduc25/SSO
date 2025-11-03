@@ -15,10 +15,19 @@ SSO/
 ├─ sso-backend/               # Mã nguồn backend (Node.js/Express)
 │  ├─ app.js                  # Điểm vào server Express
 │  ├─ config/
+<<<<<<< HEAD
+=======
+│  │  ├─ db.js                 # Kết nối MongoDB bằng mongoose
+>>>>>>> c73cb6e (Cập nhật hướng dẫn cấu hình môi trường trong README.md)
 │  │  └─ passport-setup.js    # Cấu hình Passport strategies (Google/GitHub/JWT)
 │  ├─ routes/
 │  │  ├─ api-routes.js        # API endpoints dùng trong ứng dụng
 │  │  └─ auth-routes.js       # Routes xác thực (điểm bắt đầu/redirect OAuth)
+<<<<<<< HEAD
+=======
+│  ├─ models/
+│  │  └─ User.js              # Mongoose model người dùng
+>>>>>>> c73cb6e (Cập nhật hướng dẫn cấu hình môi trường trong README.md)
 │  ├─ package.json            # Script chạy, dependencies backend
 │  └─ .env (tạo mới)          # Biến môi trường backend (không commit)
 │

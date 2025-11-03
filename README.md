@@ -155,5 +155,15 @@ npm start
 
 ---
 Nếu cần tích hợp DB thật hoặc triển khai production, bạn có thể mở rộng phần cấu hình DB, bảo mật session/JWT, và tách cấu hình theo môi trường (`.env.development`, `.env.production`).
+### Kết quả
+- Google
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7be6e48b-1ab3-4855-9ee3-51332d571626" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/37403fee-0e88-429f-b690-daee03097826" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/af7c64ee-8158-413d-951a-067a2950830b" />
+
+- Github
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/891d7bd9-0395-44ce-b8ea-8fc32ef61228" />
+
 
 

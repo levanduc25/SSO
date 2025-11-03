@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const passport = require('passport');
 const cors = require('cors');
+const { connectMongo } = require('./config/db');
 
 const PORT = process.env.PORT || 8080;
 
@@ -38,6 +39,13 @@ app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
 
 // --- Lắng nghe cổng ---
-app.listen(PORT, () => {
-  console.log(`✅ Backend server đang chạy tại: http://localhost:${PORT}`);
-});
+connectMongo(process.env.MONGODB_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✅ Backend server đang chạy tại: http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Kết nối MongoDB thất bại:', err.message);
+    process.exit(1);
+  });

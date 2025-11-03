@@ -5,32 +5,35 @@ const GithubStrategy = require("passport-github2").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 
-const users = {}; // bộ nhớ tạm (demo)
+const User = require('../models/User');
 
-const findOrCreateUser = (profile, provider) => {
-  const uniqueId = `${provider}:${profile.id}`;
-  if (users[uniqueId]) return users[uniqueId];
-
+async function findOrUpsertUser(profile, provider) {
+  const providerId = String(profile.id);
   const photoUrl =
     profile.photos?.[0]?.value ||
     "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
-  const newUser = {
-    uniqueId,
-    id: profile.id,
-    displayName:
+  const filter = { provider, provider_id: providerId };
+  const updates = {
+    provider_id: providerId,
+    email: profile.emails?.[0]?.value || null,
+    name:
       profile.displayName ||
       profile.username ||
       profile.emails?.[0]?.value ||
       "Người dùng mới",
-    email: profile.emails?.[0]?.value || null,
-    provider,
-    photo: photoUrl,
+    avatar_url: photoUrl,
+    last_login: new Date(),
   };
 
-  users[uniqueId] = newUser;
-  return newUser;
-};
+  const user = await User.findOneAndUpdate(
+    filter,
+    { $set: updates, $setOnInsert: { provider } },
+    { new: true, upsert: true }
+  );
+
+  return user;
+}
 
 // --- Google OAuth ---
 passport.use(
@@ -41,10 +44,21 @@ passport.use(
       callbackURL:
         `${process.env.BACKEND_URL || "http://localhost:8080"}/auth/google/callback`,
     },
-    (accessToken, refreshToken, profile, done) => {
-      console.log("✅ CODE EXCHANGE GOOGLE THÀNH CÔNG!");
-      const user = findOrCreateUser(profile, "google");
-      return done(null, user);
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        console.log("✅ CODE EXCHANGE GOOGLE THÀNH CÔNG!");
+        const user = await findOrUpsertUser(profile, "google");
+        return done(null, {
+          uniqueId: `mongo:${user._id.toString()}`,
+          id: user._id.toString(),
+          displayName: user.name,
+          email: user.email,
+          provider: user.provider,
+          photo: user.avatar_url,
+        });
+      } catch (err) {
+        return done(err);
+      }
     }
   )
 );
@@ -58,10 +72,21 @@ passport.use(
       callbackURL:
         `${process.env.BACKEND_URL || "http://localhost:8080"}/auth/github/callback`,
     },
-    (accessToken, refreshToken, profile, done) => {
-      console.log("✅ CODE EXCHANGE GITHUB THÀNH CÔNG!");
-      const user = findOrCreateUser(profile, "github");
-      return done(null, user);
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        console.log("✅ CODE EXCHANGE GITHUB THÀNH CÔNG!");
+        const user = await findOrUpsertUser(profile, "github");
+        return done(null, {
+          uniqueId: `mongo:${user._id.toString()}`,
+          id: user._id.toString(),
+          displayName: user.name,
+          email: user.email,
+          provider: user.provider,
+          photo: user.avatar_url,
+        });
+      } catch (err) {
+        return done(err);
+      }
     }
   )
 );
@@ -73,12 +98,25 @@ passport.use(
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.JWT_SECRET,
     },
-    (jwt_payload, done) => {
-      const user = users[jwt_payload.sub];
-      if (user) return done(null, user);
-      return done(null, false);
+    async (jwt_payload, done) => {
+      try {
+        const sub = String(jwt_payload.sub || "");
+        if (!sub.startsWith('mongo:')) return done(null, false);
+        const mongoId = sub.replace('mongo:', '');
+        const user = await User.findById(mongoId).lean();
+        if (!user) return done(null, false);
+        return done(null, {
+          uniqueId: `mongo:${user._id.toString()}`,
+          id: user._id.toString(),
+          displayName: user.name,
+          email: user.email,
+          provider: user.provider,
+          photo: user.avatar_url,
+        });
+      } catch (err) {
+        return done(err);
+      }
     }
   )
 );
-
-module.exports = { passport, users };
+module.exports = { passport };

@@ -5,7 +5,7 @@ Dự án minh họa cơ chế đăng nhập một lần (Single Sign-On – SSO)
 
 ### Công nghệ sử dụng
 - **Ngôn ngữ**: JavaScript (Node.js cho backend), JavaScript/JSX (React cho frontend)
-- **Backend**: Express, Passport, passport-google-oauth20, passport-github2, express-session, jsonwebtoken, cors, dotenv
+- **Backend**: Express, Passport, passport-google-oauth20, passport-github2, express-session, jsonwebtoken, cors, dotenv, mongoose
 - **Frontend**: React, react-router-dom, react-scripts (CRA)
 - **CSDL (tùy chọn)**: Chưa bắt buộc trong repo này. Có thể tích hợp MongoDB/MySQL nếu cần lưu người dùng/phiên lâu dài
 
@@ -41,11 +41,9 @@ SSO/
 - **CSDL (tùy chọn)**: MongoDB hoặc MySQL nếu bạn cần lưu dữ liệu người dùng
 
 ### Cấu hình biến môi trường
-
-Tạo file `.env` trong `sso-backend/` với các biến sau (ví dụ):
 ```
 PORT=5000
-SERVER_URL=http://localhost:5000
+BACKEND_URL=http://localhost:5000
 CLIENT_URL=http://localhost:3000
 
 # Session/JWT
@@ -58,14 +56,9 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 GITHUB_CLIENT_ID=your_github_client_id
 GITHUB_CLIENT_SECRET=your_github_client_secret
 
-# Database (tùy chọn)
+# Database (MongoDB)
 MONGODB_URI=mongodb://localhost:27017/sso
-# Hoặc MySQL
-MYSQL_HOST=localhost
-MYSQL_PORT=3306
-MYSQL_DATABASE=sso
-MYSQL_USER=root
-MYSQL_PASSWORD=your_password
+
 ```
 
 Tạo file `.env` trong `sso-frontend/` (nếu cần gọi API qua biến môi trường):
@@ -84,11 +77,6 @@ Repo hiện tại không bắt buộc CSDL. Nếu bạn muốn lưu người dù
   - (Tùy chọn) Tạo collection `users` nếu bạn sẽ lưu hồ sơ người dùng
   - Tích hợp mã ORM/driver (ví dụ: mongoose) vào `sso-backend/app.js` và nơi cần thiết
 
-- **MySQL**
-  - Cài MySQL Server, tạo database `sso`
-  - Cập nhật biến `MYSQL_*` trong `sso-backend/.env`
-  - Import schema nếu có: `mysql -u root -p sso < schema.sql`
-  - Tích hợp thư viện (ví dụ: `mysql2`/`sequelize`) vào backend
 
 ### Cách cấu hình kết nối DB
 - Thêm thư viện phù hợp vào backend (ví dụ: `npm i mongoose` cho MongoDB, hoặc `npm i mysql2` cho MySQL)
@@ -114,6 +102,24 @@ require('dotenv').config();
 const { connectMongo } = require('./config/db');
 connectMongo(process.env.MONGODB_URI);
 ```
+
+### Lưu người dùng vào MongoDB
+Khi người dùng đăng nhập qua Google/GitHub, backend sẽ upsert bản ghi người dùng theo cặp khóa duy nhất `(provider, provider_id)` và cập nhật `last_login`.
+
+| Trường        | Mô tả                              |
+| ------------- | ---------------------------------- |
+| `id`          | ID nội bộ (MongoDB ObjectId)       |
+| `provider`    | `google` hoặc `github`             |
+| `provider_id` | ID mà Google/GitHub cấp (duy nhất theo provider) |
+| `email`       | Email xác thực từ provider         |
+| `name`        | Tên hiển thị                       |
+| `avatar_url`  | Ảnh đại diện                       |
+| `created_at`  | Thời gian tạo                      |
+| `last_login`  | Lần đăng nhập gần nhất             |
+
+- Model: `sso-backend/models/User.js`
+- Index duy nhất: `userSchema.index({ provider: 1, provider_id: 1 }, { unique: true })`
+- JWT `sub` có dạng: `mongo:<_id>` và được xác thực lại từ DB ở chiến lược JWT.
 
 ### Hướng dẫn cài đặt & chạy chương trình
 
@@ -167,3 +173,4 @@ Nếu cần tích hợp DB thật hoặc triển khai production, bạn có th�
 
 
 
+## Kết quả

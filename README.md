@@ -15,19 +15,13 @@ SSO/
 ├─ sso-backend/               # Mã nguồn backend (Node.js/Express)
 │  ├─ app.js                  # Điểm vào server Express
 │  ├─ config/
-<<<<<<< HEAD
-=======
 │  │  ├─ db.js                 # Kết nối MongoDB bằng mongoose
->>>>>>> c73cb6e (Cập nhật hướng dẫn cấu hình môi trường trong README.md)
 │  │  └─ passport-setup.js    # Cấu hình Passport strategies (Google/GitHub/JWT)
 │  ├─ routes/
 │  │  ├─ api-routes.js        # API endpoints dùng trong ứng dụng
 │  │  └─ auth-routes.js       # Routes xác thực (điểm bắt đầu/redirect OAuth)
-<<<<<<< HEAD
-=======
 │  ├─ models/
 │  │  └─ User.js              # Mongoose model người dùng
->>>>>>> c73cb6e (Cập nhật hướng dẫn cấu hình môi trường trong README.md)
 │  ├─ package.json            # Script chạy, dependencies backend
 │  └─ .env (tạo mới)          # Biến môi trường backend (không commit)
 │
@@ -174,14 +168,10 @@ npm start
 Nếu cần tích hợp DB thật hoặc triển khai production, bạn có thể mở rộng phần cấu hình DB, bảo mật session/JWT, và tách cấu hình theo môi trường (`.env.development`, `.env.production`).
 ## 13) Kết quả (hình ảnh minh họa)
 - Google
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7be6e48b-1ab3-4855-9ee3-51332d571626" />
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/37403fee-0e88-429f-b690-daee03097826" />
-
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/af7c64ee-8158-413d-951a-067a2950830b" />
-
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/66d582b5-7712-4463-b9da-e1a23d45c32b" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f9382f65-8862-4e7f-bd53-ef6b008c93cc" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/4ba472a0-cc49-40ca-b8f1-209b6f654fef" />
 - Github
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/891d7bd9-0395-44ce-b8ea-8fc32ef61228" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1fc61484-99ca-4221-9b70-f847d353db8c" />
 
 
-
-## Kết quả

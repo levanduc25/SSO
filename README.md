@@ -1,10 +1,10 @@
 
 ## Hệ thống SSO (Single Sign-On) – Backend (Node.js/Express) & Frontend (React)
-| STT | Họ và tên          | Mã sinh viên | Công việc |
-| --: | ------------------ | ------------ |-----------|
-|   1 | **Vũ Đăng Khoa**   | 22810310035  | Báo cáo   |
-|   2 | **Lê Văn Đức**     | 22810310007  | Backend   |
-|   3 | **Ngô Thành Công** | 22810310027  | Frontend  |
+| STT | Họ và tên          | Mã sinh viên | Công việc                  |
+| --: | ------------------ | ------------ |----------------------------|
+|   1 | **Vũ Đăng Khoa**   | 22810310035  | Frontend, báo cáo          |
+|   2 | **Lê Văn Đức**     | 22810310007  | Backend, xác thực, báo cáo |
+|   3 | **Ngô Thành Công** | 22810310027  | Frontend, backend, báo cáo |
 
 ### 1) Giới thiệu ngắn gọn
 Dự án minh họa cơ chế đăng nhập một lần (Single Sign-On – SSO) sử dụng Passport OAuth (Google, GitHub). Backend cung cấp API xác thực và phiên người dùng; Frontend (React) điều hướng người dùng qua luồng đăng nhập và hiển thị trạng thái sau khi xác thực.
